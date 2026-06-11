@@ -44,10 +44,10 @@ Baseado em `pixel-therapy-ideia.md`. Marque os checkboxes conforme for concluind
 
 ## Etapa 3 — Backend: endpoint da API
 
-- [ ] Criar `backend/src/routes/generatePixelArt.ts`
-- [ ] Implementar `POST /api/generate-pixel-art`
-- [ ] Configurar `server.ts` (Express, CORS para o frontend, porta, middlewares)
-- [ ] Testar endpoint via curl/Postman e validar resposta
+- [x] Criar `backend/src/routes/generatePixelArt.ts`
+- [x] Implementar `POST /api/generate-pixel-art`
+- [x] Configurar `server.ts` (Express, CORS para o frontend, porta, middlewares)
+- [x] Testar endpoint via curl/Postman e validar resposta
 
 ---
 
