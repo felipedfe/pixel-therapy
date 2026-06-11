@@ -53,11 +53,11 @@ Baseado em `pixel-therapy-ideia.md`. Marque os checkboxes conforme for concluind
 
 ## Etapa 4 — Frontend: utilitários e lógica de jogo
 
-- [ ] `utils/compareGrids.ts` → `calculateAccuracy(targetGrid, userGrid)`
-- [ ] `createEmptyGrid(size = 12)`
-- [ ] `paintCell(row, col)` (atualização imutável do grid)
-- [ ] `isCellWrong(row, col)` para destacar erros
-- [ ] Mapear faixas de precisão para mensagens ("Perfeito!", "Quase perfeito!", etc.)
+- [x] `utils/compareGrids.ts` → `calculateAccuracy(targetGrid, userGrid)`
+- [x] `createEmptyGrid(size = 12)`
+- [x] `paintCell(row, col)` (atualização imutável do grid)
+- [x] `isCellWrong(row, col)` para destacar erros
+- [x] Mapear faixas de precisão para mensagens ("Perfeito!", "Quase perfeito!", etc.)
 
 ---
 
