@@ -26,19 +26,19 @@ Baseado em `pixel-therapy-ideia.md`. Marque os checkboxes conforme for concluind
 
 ## Etapa 2 — Backend: integração com OpenAI
 
-- [ ] Instalar SDK oficial (`openai`)
-- [ ] Criar `backend/src/data/palettes.ts` com a lista de paletas pré-definidas e `pickRandomPalette()`
-- [ ] Criar `backend/src/services/openaiService.ts`
-  - [ ] Montar prompt (conforme seção "Prompt para a IA" do doc) — IA gera apenas `title` + `grid`, sem paleta
-  - [ ] Usar **Structured Outputs / JSON Schema** (ver seção de análise abaixo) para forçar formato `title/grid`
-  - [ ] Chamar a API com o modelo escolhido (sugestão: `gpt-4o-mini`)
-  - [ ] Combinar o `grid` retornado pela IA com `pickRandomPalette()` para montar o `PixelArtChallenge` final
-- [ ] Criar função de validação do JSON retornado pela IA
-  - [ ] `title` existe e é string
-  - [ ] `grid` tem 12 linhas x 12 colunas
-  - [ ] todos os valores entre 0-4
-- [ ] Implementar retry (1-2 tentativas) caso a validação falhe
-- [ ] Caso falhe todas as tentativas, retornar erro controlado (ex: 502 com mensagem amigável)
+- [x] Instalar SDK oficial (`openai`)
+- [x] Criar `backend/src/data/palettes.ts` com a lista de paletas pré-definidas e `pickRandomPalette()`
+- [x] Criar `backend/src/services/openaiService.ts`
+  - [x] Montar prompt (conforme seção "Prompt para a IA" do doc) — IA gera apenas `title` + `grid`, sem paleta
+  - [x] Usar **Structured Outputs / JSON Schema** (ver seção de análise abaixo) para forçar formato `title/grid`
+  - [x] Chamar a API com o modelo escolhido (sugestão: `gpt-4o-mini`)
+  - [x] Combinar o `grid` retornado pela IA com `pickRandomPalette()` para montar o `PixelArtChallenge` final
+- [x] Criar função de validação do JSON retornado pela IA
+  - [x] `title` existe e é string
+  - [x] `grid` tem 12 linhas x 12 colunas
+  - [x] todos os valores entre 0-4
+- [x] Implementar retry (1-2 tentativas) caso a validação falhe
+- [x] Caso falhe todas as tentativas, retornar erro controlado (ex: 502 com mensagem amigável)
 
 ---
 
