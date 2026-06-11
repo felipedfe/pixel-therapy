@@ -63,31 +63,31 @@ Baseado em `pixel-therapy-ideia.md`. Marque os checkboxes conforme for concluind
 
 ## Etapa 5 — Frontend: componentes
 
-- [ ] `PixelGrid.tsx` (reutilizável: referência e editável, props conforme doc)
-- [ ] `ColorPalette.tsx` (seleção de cor, indicador de cor ativa, borracha = cor 0)
-- [ ] `ResultPanel.tsx` (mostra % de acerto e mensagem)
-- [ ] `GamePage.tsx` (orquestra estado do jogo, chama o backend, layout principal)
+- [x] `PixelGrid.tsx` (reutilizável: referência e editável, props conforme doc)
+- [x] `ColorPalette.tsx` (seleção de cor, indicador de cor ativa, borracha = cor 0)
+- [x] `ResultPanel.tsx` (mostra % de acerto e mensagem)
+- [x] `GamePage.tsx` (orquestra estado do jogo, chama o backend, layout principal)
 
 ---
 
 ## Etapa 6 — Frontend: estado e fluxo do jogo
 
-- [ ] Estado global (`useState` simples ou Zustand) para `GameState`
-- [ ] Botão "Gerar novo padrão" → chama `POST /api/generate-pixel-art`
-- [ ] Loading state enquanto a IA gera o desafio
-- [ ] Tratamento de erro (ex: backend indisponível, IA falhou)
-- [ ] Botão "Verificar" → calcula e exibe precisão
-- [ ] Botão "Limpar" → reseta `userGrid`
-- [ ] Destaque visual de células erradas (sutil, conforme doc)
+- [x] Estado global (`useState` simples ou Zustand) para `GameState`
+- [x] Botão "Gerar novo padrão" → chama `POST /api/generate-pixel-art`
+- [x] Loading state enquanto a IA gera o desafio
+- [x] Tratamento de erro (ex: backend indisponível, IA falhou)
+- [x] Botão "Verificar" → calcula e exibe precisão
+- [x] Botão "Limpar" → reseta `userGrid`
+- [x] Destaque visual de células erradas (sutil, conforme doc)
 
 ---
 
 ## Etapa 7 — Estilo e experiência visual
 
-- [ ] Aplicar Styled Components com paleta calma/neutra
-- [ ] Layout desktop (dois grids lado a lado + paleta + botões + resultado)
-- [ ] Layout mobile (empilhado)
-- [ ] Microinterações suaves (hover, transições de cor)
+- [x] Aplicar Styled Components com paleta calma/neutra
+- [x] Layout desktop (dois grids lado a lado + paleta + botões + resultado)
+- [x] Layout mobile (empilhado)
+- [x] Microinterações suaves (hover, transições de cor)
 
 ---
 

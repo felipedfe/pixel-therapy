@@ -44,7 +44,7 @@ export const palettes: PixelPalette[] = [
     "4": "#D21B6E",
   },
   {
-    "0": "#FFFFFF",
+    "0": "#efefef",
     "1": "#091F26",
     "2": "#1D738B",
     "3": "#D0E0EF",

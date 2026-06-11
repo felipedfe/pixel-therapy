@@ -1,0 +1,221 @@
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { PixelGrid } from "../components/PixelGrid";
+import { ColorPalette } from "../components/ColorPalette";
+import { ResultPanel } from "../components/ResultPanel";
+import type { GameState } from "../types/game";
+import { createEmptyGrid, paintCell } from "../utils/grid";
+import { calculateAccuracy, isCellWrong } from "../utils/compareGrids";
+import { fetchPixelArtChallenge } from "../utils/api";
+
+const Container = styled.div`
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+`;
+
+const Subtitle = styled.p`
+  margin: 0;
+  color: var(--color-text-soft);
+`;
+
+const GridsRow = styled.div`
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
+const GridColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const ColumnLabel = styled.span`
+  font-size: 0.85rem;
+  color: var(--color-text-soft);
+`;
+
+const Controls = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+`;
+
+const ButtonsRow = styled.div`
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--color-bg);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+`;
+
+const PrimaryButton = styled(Button)`
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: var(--color-accent);
+    opacity: 0.9;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: var(--color-error);
+`;
+
+export function GamePage() {
+  const [game, setGame] = useState<GameState>({
+    challenge: null,
+    userGrid: createEmptyGrid(),
+    selectedColor: 1,
+    score: null,
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function loadNewChallenge() {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const challenge = await fetchPixelArtChallenge();
+      setGame({
+        challenge,
+        userGrid: createEmptyGrid(),
+        selectedColor: 1,
+        score: null,
+      });
+    } catch {
+      setError("Não foi possível gerar um novo padrão. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- carregamento inicial do desafio
+    loadNewChallenge();
+  }, []);
+
+  function handleCellClick(row: number, col: number) {
+    setGame((prev) => ({
+      ...prev,
+      userGrid: paintCell(prev.userGrid, row, col, prev.selectedColor),
+      score: null,
+    }));
+  }
+
+  function handleSelectColor(color: GameState["selectedColor"]) {
+    setGame((prev) => ({ ...prev, selectedColor: color }));
+  }
+
+  function handleVerify() {
+    if (!game.challenge) return;
+
+    const accuracy = calculateAccuracy(game.challenge.grid, game.userGrid);
+    setGame((prev) => ({ ...prev, score: accuracy }));
+  }
+
+  function handleClear() {
+    setGame((prev) => ({ ...prev, userGrid: createEmptyGrid(), score: null }));
+  }
+
+  const wrongCells =
+    game.challenge && game.score !== null
+      ? game.challenge.grid.map((row, rowIndex) =>
+          row.map((_, colIndex) => isCellWrong(game.challenge!.grid, game.userGrid, rowIndex, colIndex)),
+        )
+      : undefined;
+
+  return (
+    <Container>
+      <Title>Pixel Therapy</Title>
+      <Subtitle>Reproduza o padrão usando a mesma paleta de cores.</Subtitle>
+
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
+      {game.challenge && (
+        <>
+          <GridsRow>
+            <GridColumn>
+              <ColumnLabel>Referência — {game.challenge.title}</ColumnLabel>
+              <PixelGrid grid={game.challenge.grid} palette={game.challenge.palette} />
+            </GridColumn>
+            <GridColumn>
+              <ColumnLabel>Sua cópia</ColumnLabel>
+              <PixelGrid
+                grid={game.userGrid}
+                palette={game.challenge.palette}
+                editable
+                selectedColor={game.selectedColor}
+                onCellClick={handleCellClick}
+                wrongCells={wrongCells}
+              />
+            </GridColumn>
+          </GridsRow>
+
+          <Controls>
+            <ColorPalette
+              palette={game.challenge.palette}
+              selectedColor={game.selectedColor}
+              onSelectColor={handleSelectColor}
+            />
+
+            <ButtonsRow>
+              <PrimaryButton type="button" onClick={handleVerify}>
+                Verificar
+              </PrimaryButton>
+              <Button type="button" onClick={handleClear}>
+                Limpar
+              </Button>
+              <Button type="button" onClick={loadNewChallenge} disabled={loading}>
+                {loading ? "Gerando..." : "Novo padrão"}
+              </Button>
+            </ButtonsRow>
+
+            {game.score !== null && <ResultPanel score={game.score} />}
+          </Controls>
+        </>
+      )}
+
+      {loading && !game.challenge && <Subtitle>Gerando seu primeiro padrão...</Subtitle>}
+    </Container>
+  );
+}
