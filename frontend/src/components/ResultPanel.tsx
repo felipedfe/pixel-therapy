@@ -23,7 +23,7 @@ const Message = styled.span`
 export function ResultPanel({ score }: ResultPanelProps) {
   return (
     <Wrapper>
-      {/* <Score>{score}% de precisão</Score> */}
+      {/* <Score>{score}% accuracy</Score> */}
       <Message>{getResultMessage(score)}</Message>
     </Wrapper>
   );

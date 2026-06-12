@@ -62,8 +62,8 @@ export function ColorPalette({ palette, selectedColor, onSelectColor, vertical }
         $color={palette[0]}
         $selected={selectedColor === 0}
         onClick={() => onSelectColor(0)}
-        aria-label="Borracha"
-        title="Borracha"
+        aria-label="Eraser"
+        title="Eraser"
       /> */}
       {PAINT_COLORS.map((color) => (
         <Swatch
@@ -72,7 +72,7 @@ export function ColorPalette({ palette, selectedColor, onSelectColor, vertical }
           $color={palette[color]}
           $selected={selectedColor === color}
           onClick={() => onSelectColor(color)}
-          aria-label={`Cor ${color}`}
+          aria-label={`Color ${color}`}
           title={palette[color]}
         />
       ))}

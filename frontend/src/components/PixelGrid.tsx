@@ -21,8 +21,8 @@ const Wrapper = styled.div`
   border-radius: 12px;
 `;
 
-// anel vermelho + anel branco (separa o vermelho de cores próximas, ex: magenta, da paleta)
-// transparente quando a célula não está marcada como errada, para permitir o fade de entrada
+// red ring + white ring (keeps the red from blending into similar palette colors, e.g. magenta)
+// transparent when the cell isn't marked as wrong, to allow the fade-in entrance
 const Cell = styled.button<{ $color: string; $editable: boolean; $wrong: boolean }>`
   width: 24px;
   height: 24px;
@@ -117,7 +117,7 @@ export function PixelGrid({
             onMouseDown={() => startPainting(rowIndex, colIndex)}
             onMouseEnter={() => continuePainting(rowIndex, colIndex)}
             onTouchStart={() => startPainting(rowIndex, colIndex)}
-            aria-label={`Célula linha ${rowIndex + 1}, coluna ${colIndex + 1}`}
+            aria-label={`Cell row ${rowIndex + 1}, column ${colIndex + 1}`}
           />
         )),
       )}

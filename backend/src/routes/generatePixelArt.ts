@@ -8,7 +8,7 @@ generatePixelArtRouter.post("/generate-pixel-art", async (_req, res) => {
     const challenge = await generatePixelArtChallenge();
     res.json(challenge);
   } catch (error) {
-    console.error("Erro ao gerar pixel art:", error);
-    res.status(502).json({ error: "Não foi possível gerar um novo padrão. Tente novamente." });
+    console.error("Error generating pixel art:", error);
+    res.status(502).json({ error: "Could not generate a new pattern. Please try again." });
   }
 });

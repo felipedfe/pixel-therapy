@@ -73,6 +73,15 @@ export const palettes: PixelPalette[] = [
   },
 ];
 
+let lastPaletteIndex: number | null = null;
+
 export function pickRandomPalette(): PixelPalette {
-  return palettes[Math.floor(Math.random() * palettes.length)];
+  let index: number;
+
+  do {
+    index = Math.floor(Math.random() * palettes.length);
+  } while (index === lastPaletteIndex && palettes.length > 1);
+
+  lastPaletteIndex = index;
+  return palettes[index];
 }

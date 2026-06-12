@@ -4,6 +4,7 @@ import { PixelGrid } from "../components/PixelGrid";
 import { ColorPalette } from "../components/ColorPalette";
 import { ResultPanel } from "../components/ResultPanel";
 import { LoadingOverlay } from "../components/LoadingOverlay";
+import { SoundToggle } from "../components/SoundToggle";
 import type { GameState } from "../types/game";
 import { createEmptyGrid, paintCell } from "../utils/grid";
 import { calculateAccuracy, isCellWrong } from "../utils/compareGrids";
@@ -159,7 +160,7 @@ export function GamePage() {
         score: null,
       });
     } catch {
-      setError("Não foi possível gerar um novo padrão. Tente novamente.");
+      setError("Could not generate a new pattern. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -214,10 +215,11 @@ export function GamePage() {
 
   return (
     <Border>
+      <SoundToggle />
 
       <Container>
         <Title>Pixel Therapy</Title>
-        <Subtitle>Reproduza o padrão usando a mesma paleta de cores.</Subtitle>
+        <Subtitle>Recreate the pattern using the same color palette.</Subtitle>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
@@ -225,7 +227,7 @@ export function GamePage() {
           <>
             <GridsRow>
               <GridColumn>
-                <ColumnLabel>Referência — {game.challenge.title}</ColumnLabel>
+                <ColumnLabel>Title: <strong>{game.challenge.title}</strong></ColumnLabel>
                 <PixelGrid grid={game.challenge.grid} palette={game.challenge.palette} />
               </GridColumn>
               <VerticalPaletteColumn>
@@ -237,7 +239,7 @@ export function GamePage() {
                 />
               </VerticalPaletteColumn>
               <GridColumn>
-                <ColumnLabel>Sua cópia</ColumnLabel>
+                <ColumnLabel>Your copy</ColumnLabel>
                 <PixelGrid
                   grid={game.userGrid}
                   palette={game.challenge.palette}
@@ -260,13 +262,13 @@ export function GamePage() {
 
               <ButtonsRow>
                 <PrimaryButton type="button" onClick={handleVerify} $active={game.score !== null}>
-                  Verificar
+                  Check
                 </PrimaryButton>
                 <Button type="button" onClick={handleClear}>
-                  Limpar
+                  Clear
                 </Button>
                 <Button type="button" onClick={loadNewChallenge} disabled={loading}>
-                  {loading ? "Gerando..." : "Novo padrão"}
+                  {loading ? "Generating..." : "New pattern"}
                 </Button>
               </ButtonsRow>
 

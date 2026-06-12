@@ -48,8 +48,8 @@ Lista de melhorias para implementar uma de cada vez. Marque os checkboxes confor
 
 ## 7. Não repetir a paleta da obra anterior
 
-- [ ] `pickRandomPalette()` não pode sortear a mesma paleta usada na geração anterior
-- [ ] Guardar referência da última paleta usada (ex: índice) e excluí-la do sorteio seguinte
+- [x] `pickRandomPalette()` não pode sortear a mesma paleta usada na geração anterior
+- [x] Guardar referência da última paleta usada (ex: índice) e excluí-la do sorteio seguinte
 
 ---
 

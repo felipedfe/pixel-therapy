@@ -8,28 +8,29 @@ const MAX_ATTEMPTS = 3;
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const SYSTEM_PROMPT = `Você é uma API geradora de desafios de pixel art abstrata.
+const SYSTEM_PROMPT = `You are an API that generates abstract pixel art challenges.
 
-Retorne apenas JSON válido.
-Não use markdown.
-Não explique nada.
-Não gere imagem, PNG, JPEG, SVG ou ASCII art.
+Return only valid JSON.
+Do not use markdown.
+Do not explain anything.
+Do not generate an image, PNG, JPEG, SVG, or ASCII art.
 
-Regras:
-- Gere uma pixel art abstrata.
-- O grid deve ter exatamente 12 linhas e 12 colunas.
-- Use apenas os números 0, 1, 2, 3 e 4.
-- O número 0 representa fundo.
-- A composição deve ser visualmente interessante.
-- Explore formas geométricas, curvas sugeridas, blocos de cor, linhas e áreas de cor.
-- A cada geração, crie uma imagem diferente.
-- Evite padrões muito aleatórios; a imagem deve parecer intencional.
-- Evite muitos pixels isolados.
-- Prefira massas de cor, ritmo visual e composição equilibrada.
+Rules:
+- Generate an abstract pixel art piece.
+- The grid must have exactly 12 rows and 12 columns.
+- Use only the numbers 0, 1, 2, 3, and 4.
+- The number 0 represents the background.
+- The composition should be visually interesting.
+- Explore geometric shapes, suggested curves, color blocks, lines, and color areas.
+- Create a different image on every generation.
+- Avoid overly random patterns; the image should feel intentional.
+- Avoid too many isolated pixels.
+- Prefer color masses, visual rhythm, and balanced composition.
+- Give the piece a surreal, free-association title (2-3 words) — unexpected word pairings that don't need to relate to the image at all, e.g. "Science Turtle", "Parts of Choice", "Singular Rainbow", "Class Act", "Tide of Phantom". Avoid generic titles like "Abstract Pattern" or "Geometric Shapes", and avoid poetic nature clichés like "The Shape of Rain" or "Quiet Horizon".
 
-Não gere paleta de cores — apenas a composição (grid).
+Do not generate a color palette — only the composition (grid).
 
-Formato obrigatório:
+Required format:
 
 {
   "title": "string",
@@ -92,7 +93,7 @@ async function requestGridFromAI(): Promise<unknown> {
 
   const content = response.choices[0]?.message?.content;
   if (!content) {
-    throw new Error("Resposta vazia da OpenAI");
+    throw new Error("Empty response from OpenAI");
   }
 
   return JSON.parse(content);
@@ -111,11 +112,11 @@ export async function generatePixelArtChallenge(): Promise<PixelArtChallenge> {
         };
       }
 
-      console.warn(`Tentativa ${attempt}: resposta da IA em formato inválido`, result);
+      console.warn(`Attempt ${attempt}: AI response in invalid format`, result);
     } catch (error) {
-      console.warn(`Tentativa ${attempt}: erro ao chamar a OpenAI`, error);
+      console.warn(`Attempt ${attempt}: error calling OpenAI`, error);
     }
   }
 
-  throw new Error("Não foi possível gerar um desafio válido após múltiplas tentativas.");
+  throw new Error("Could not generate a valid challenge after multiple attempts.");
 }

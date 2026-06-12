@@ -31,7 +31,7 @@ export function LoadingOverlay() {
     <Backdrop>
       <Content>
         <LoadingBlocks />
-        <Text>Gerando...</Text>
+        <Text>Generating...</Text>
       </Content>
     </Backdrop>
   );

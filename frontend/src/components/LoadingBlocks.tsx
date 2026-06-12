@@ -25,7 +25,7 @@ const Block = styled.span<{ $color: string; $delay: number }>`
   animation-delay: ${(props) => props.$delay}s;
 `;
 
-// paleta "Geometric Harmony" (palettes.ts), cores 1-4
+// "Geometric Harmony" palette (palettes.ts), colors 1-4
 const COLORS = ["#FCB944", "#F0533B", "#0E747C", "#81B9BF"];
 
 export function LoadingBlocks() {
