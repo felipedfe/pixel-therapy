@@ -1,5 +1,14 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { LoadingBlocks } from "./LoadingBlocks";
+
+const MESSAGES = [
+  "An artist is sketching...",
+  "The AI is painting...",
+  "The AI is looking for inspiration...",
+  "Mixing colors...",
+  "Composing a new piece...",
+];
 
 const Backdrop = styled.div`
   position: fixed;
@@ -22,16 +31,18 @@ const Text = styled.p`
   margin: 0;
   color: var(--color-text);
   font-weight: 500;
-  padding: 3px;
+  padding: 4px;
   background-color: var(--color-border);
 `;
 
 export function LoadingOverlay() {
+  const [message] = useState(() => MESSAGES[Math.floor(Math.random() * MESSAGES.length)]);
+
   return (
     <Backdrop>
       <Content>
         <LoadingBlocks />
-        <Text>Generating...</Text>
+        <Text>{message}</Text>
       </Content>
     </Backdrop>
   );

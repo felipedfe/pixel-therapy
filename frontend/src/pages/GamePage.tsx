@@ -219,7 +219,7 @@ export function GamePage() {
 
       <Container>
         <Title>Pixel Therapy</Title>
-        <Subtitle>Recreate the pattern using the same color palette.</Subtitle>
+        <Subtitle>Observe carefully and recreate the piece.</Subtitle>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
@@ -268,7 +268,7 @@ export function GamePage() {
                   Clear
                 </Button>
                 <Button type="button" onClick={loadNewChallenge} disabled={loading}>
-                  {loading ? "Generating..." : "New pattern"}
+                  {loading ? "Generating..." : "New Piece"}
                 </Button>
               </ButtonsRow>
 
