@@ -5,15 +5,23 @@ type ColorPaletteProps = {
   palette: PixelPalette;
   selectedColor: PixelValue;
   onSelectColor: (color: PixelValue) => void;
+  vertical?: boolean;
 };
 
 const PAINT_COLORS: PixelValue[] = [1, 2, 3, 4];
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $vertical?: boolean }>`
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+
+  ${(props) =>
+    props.$vertical &&
+    `
+      flex-direction: column;
+      flex-wrap: nowrap;
+    `}
 `;
 
 const Swatch = styled.button<{ $color: string; $selected: boolean }>`
@@ -33,30 +41,30 @@ const Swatch = styled.button<{ $color: string; $selected: boolean }>`
   }
 `;
 
-const Eraser = styled(Swatch)`
-  position: relative;
-  background-color: var(--color-surface);
+// const Eraser = styled(Swatch)`
+//   position: relative;
+//   background-color: var(--color-surface);
+//
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     inset: 8px;
+//     border: 2px solid var(--color-text-soft);
+//     border-radius: 4px;
+//   }
+// `;
 
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border: 2px solid var(--color-text-soft);
-    border-radius: 4px;
-  }
-`;
-
-export function ColorPalette({ palette, selectedColor, onSelectColor }: ColorPaletteProps) {
+export function ColorPalette({ palette, selectedColor, onSelectColor, vertical }: ColorPaletteProps) {
   return (
-    <Wrapper>
-      <Eraser
+    <Wrapper $vertical={vertical}>
+      {/* <Eraser
         type="button"
         $color={palette[0]}
         $selected={selectedColor === 0}
         onClick={() => onSelectColor(0)}
         aria-label="Borracha"
         title="Borracha"
-      />
+      /> */}
       {PAINT_COLORS.map((color) => (
         <Swatch
           key={color}

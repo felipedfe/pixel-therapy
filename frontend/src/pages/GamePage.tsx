@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PixelGrid } from "../components/PixelGrid";
 import { ColorPalette } from "../components/ColorPalette";
@@ -8,21 +8,35 @@ import { createEmptyGrid, paintCell } from "../utils/grid";
 import { calculateAccuracy, isCellWrong } from "../utils/compareGrids";
 import { fetchPixelArtChallenge } from "../utils/api";
 
+const Border = styled.div`
+  border: 10px solid var(--color-border-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  padding-top: 50px;
+  min-height: 100vh
+`
+
 const Container = styled.div`
   max-width: 880px;
   margin: 0 auto;
-  padding: 32px 16px 64px;
+  /* padding: 32px 16px 64px; */
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
   text-align: center;
+  height: 100%;
 `;
 
 const Title = styled.h1`
   font-size: 1.8rem;
   font-weight: 600;
   margin: 0;
+  border-bottom: 4px solid var(--color-success);
+  padding-bottom: 4px;
 `;
 
 const Subtitle = styled.p`
@@ -42,6 +56,22 @@ const GridColumn = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
+`;
+
+const VerticalPaletteColumn = styled.div`
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 769px) {
+    display: flex;
+  }
+`;
+
+const HorizontalPaletteWrapper = styled.div`
+  @media (min-width: 769px) {
+    display: none;
+  }
 `;
 
 const ColumnLabel = styled.span`
@@ -85,15 +115,19 @@ const Button = styled.button`
   }
 `;
 
-const PrimaryButton = styled(Button)`
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #fff;
+const PrimaryButton = styled(Button) <{ $active?: boolean }>`
+  ${(props) =>
+    props.$active &&
+    `
+      background: var(--color-success);
+      border-color: var(--color-success);
+      color: #fff;
 
-  &:hover:not(:disabled) {
-    background: var(--color-accent);
-    opacity: 0.9;
-  }
+      &:hover:not(:disabled) {
+        background: var(--color-success);
+        opacity: 0.9;
+      }
+    `}
 `;
 
 const ErrorMessage = styled.p`
@@ -109,6 +143,7 @@ export function GamePage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasFetchedRef = useRef(false);
 
   async function loadNewChallenge() {
     setLoading(true);
@@ -130,16 +165,22 @@ export function GamePage() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- carregamento inicial do desafio
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     loadNewChallenge();
   }, []);
 
   function handleCellClick(row: number, col: number) {
-    setGame((prev) => ({
-      ...prev,
-      userGrid: paintCell(prev.userGrid, row, col, prev.selectedColor),
-      score: null,
-    }));
+    setGame((prev) => {
+      const isPainted = prev.userGrid[row][col] !== 0;
+      const color = isPainted ? 0 : prev.selectedColor;
+
+      return {
+        ...prev,
+        userGrid: paintCell(prev.userGrid, row, col, color),
+        score: null,
+      };
+    });
   }
 
   function handleSelectColor(color: GameState["selectedColor"]) {
@@ -149,8 +190,14 @@ export function GamePage() {
   function handleVerify() {
     if (!game.challenge) return;
 
-    const accuracy = calculateAccuracy(game.challenge.grid, game.userGrid);
-    setGame((prev) => ({ ...prev, score: accuracy }));
+    setGame((prev) => {
+      if (prev.score !== null) {
+        return { ...prev, score: null };
+      }
+
+      const accuracy = calculateAccuracy(prev.challenge!.grid, prev.userGrid);
+      return { ...prev, score: accuracy };
+    });
   }
 
   function handleClear() {
@@ -160,62 +207,75 @@ export function GamePage() {
   const wrongCells =
     game.challenge && game.score !== null
       ? game.challenge.grid.map((row, rowIndex) =>
-          row.map((_, colIndex) => isCellWrong(game.challenge!.grid, game.userGrid, rowIndex, colIndex)),
-        )
+        row.map((_, colIndex) => isCellWrong(game.challenge!.grid, game.userGrid, rowIndex, colIndex)),
+      )
       : undefined;
 
   return (
-    <Container>
-      <Title>Pixel Therapy</Title>
-      <Subtitle>Reproduza o padrão usando a mesma paleta de cores.</Subtitle>
+    <Border>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <Container>
+        <Title>Pixel Therapy</Title>
+        <Subtitle>Reproduza o padrão usando a mesma paleta de cores.</Subtitle>
 
-      {game.challenge && (
-        <>
-          <GridsRow>
-            <GridColumn>
-              <ColumnLabel>Referência — {game.challenge.title}</ColumnLabel>
-              <PixelGrid grid={game.challenge.grid} palette={game.challenge.palette} />
-            </GridColumn>
-            <GridColumn>
-              <ColumnLabel>Sua cópia</ColumnLabel>
-              <PixelGrid
-                grid={game.userGrid}
-                palette={game.challenge.palette}
-                editable
-                selectedColor={game.selectedColor}
-                onCellClick={handleCellClick}
-                wrongCells={wrongCells}
-              />
-            </GridColumn>
-          </GridsRow>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <Controls>
-            <ColorPalette
-              palette={game.challenge.palette}
-              selectedColor={game.selectedColor}
-              onSelectColor={handleSelectColor}
-            />
+        {game.challenge && (
+          <>
+            <GridsRow>
+              <GridColumn>
+                <ColumnLabel>Referência — {game.challenge.title}</ColumnLabel>
+                <PixelGrid grid={game.challenge.grid} palette={game.challenge.palette} />
+              </GridColumn>
+              <VerticalPaletteColumn>
+                <ColorPalette
+                  palette={game.challenge.palette}
+                  selectedColor={game.selectedColor}
+                  onSelectColor={handleSelectColor}
+                  vertical
+                />
+              </VerticalPaletteColumn>
+              <GridColumn>
+                <ColumnLabel>Sua cópia</ColumnLabel>
+                <PixelGrid
+                  grid={game.userGrid}
+                  palette={game.challenge.palette}
+                  editable
+                  selectedColor={game.selectedColor}
+                  onCellClick={handleCellClick}
+                  wrongCells={wrongCells}
+                />
+              </GridColumn>
+            </GridsRow>
 
-            <ButtonsRow>
-              <PrimaryButton type="button" onClick={handleVerify}>
-                Verificar
-              </PrimaryButton>
-              <Button type="button" onClick={handleClear}>
-                Limpar
-              </Button>
-              <Button type="button" onClick={loadNewChallenge} disabled={loading}>
-                {loading ? "Gerando..." : "Novo padrão"}
-              </Button>
-            </ButtonsRow>
+            <Controls>
+              <HorizontalPaletteWrapper>
+                <ColorPalette
+                  palette={game.challenge.palette}
+                  selectedColor={game.selectedColor}
+                  onSelectColor={handleSelectColor}
+                />
+              </HorizontalPaletteWrapper>
 
-            {game.score !== null && <ResultPanel score={game.score} />}
-          </Controls>
-        </>
-      )}
+              <ButtonsRow>
+                <PrimaryButton type="button" onClick={handleVerify} $active={game.score !== null}>
+                  Verificar
+                </PrimaryButton>
+                <Button type="button" onClick={handleClear}>
+                  Limpar
+                </Button>
+                <Button type="button" onClick={loadNewChallenge} disabled={loading}>
+                  {loading ? "Gerando..." : "Novo padrão"}
+                </Button>
+              </ButtonsRow>
 
-      {loading && !game.challenge && <Subtitle>Gerando seu primeiro padrão...</Subtitle>}
-    </Container>
+              {game.score !== null && <ResultPanel score={game.score} />}
+            </Controls>
+          </>
+        )}
+
+        {loading && !game.challenge && <Subtitle>Gerando seu primeiro padrão...</Subtitle>}
+      </Container>
+    </Border>
   );
 }

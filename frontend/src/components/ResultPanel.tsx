@@ -12,9 +12,9 @@ const Wrapper = styled.div`
   font-size: 1.1rem;
 `;
 
-const Score = styled.span`
-  font-weight: 600;
-`;
+// const Score = styled.span`
+//   font-weight: 600;
+// `;
 
 const Message = styled.span`
   color: var(--color-text-soft);
@@ -23,7 +23,7 @@ const Message = styled.span`
 export function ResultPanel({ score }: ResultPanelProps) {
   return (
     <Wrapper>
-      <Score>{score}% de precisão</Score>
+      {/* <Score>{score}% de precisão</Score> */}
       <Message>{getResultMessage(score)}</Message>
     </Wrapper>
   );
