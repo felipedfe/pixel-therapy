@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { PixelGrid } from "../components/PixelGrid";
 import { ColorPalette } from "../components/ColorPalette";
 import { ResultPanel } from "../components/ResultPanel";
+import { LoadingOverlay } from "../components/LoadingOverlay";
 import type { GameState } from "../types/game";
 import { createEmptyGrid, paintCell } from "../utils/grid";
 import { calculateAccuracy, isCellWrong } from "../utils/compareGrids";
@@ -274,8 +275,9 @@ export function GamePage() {
           </>
         )}
 
-        {loading && !game.challenge && <Subtitle>Gerando seu primeiro padrão...</Subtitle>}
       </Container>
+
+      {loading && <LoadingOverlay />}
     </Border>
   );
 }
