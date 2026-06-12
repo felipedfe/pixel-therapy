@@ -3,13 +3,21 @@ import styled from "styled-components";
 import ambientTrack from "../assets/vintage-jazz.m4a";
 
 const VOLUME = 0.10;
+const HINT_STORAGE_KEY = "pixel-therapy-sound-hint-seen";
+const HINT_AUTO_DISMISS_MS = 6000;
+const HINT_FADE_MS = 300;
+
+const BUTTON_SIZE = 40;
+const BUTTON_OFFSET = 40;
+const HINT_GAP = 8;
+const HINT_ARROW_SIZE = 10;
 
 const ToggleButton = styled.button<{ $active: boolean }>`
   position: fixed;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
+  top: ${BUTTON_OFFSET}px;
+  right: ${BUTTON_OFFSET}px;
+  width: ${BUTTON_SIZE}px;
+  height: ${BUTTON_SIZE}px;
   border-radius: 50%;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -33,6 +41,39 @@ const ToggleButton = styled.button<{ $active: boolean }>`
       border-color: var(--color-success);
       color: #fff;
     `}
+`;
+
+const Hint = styled.div<{ $visible: boolean }>`
+  position: fixed;
+  top: ${BUTTON_OFFSET + BUTTON_SIZE + HINT_GAP}px;
+  right: ${BUTTON_OFFSET}px;
+  max-width: 170px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--color-border-dark);
+  color: var(--color-surface);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 11;
+  pointer-events: none;
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  transform: translateY(${(props) => (props.$visible ? "0" : "-4px")});
+  transition:
+    opacity ${HINT_FADE_MS}ms ease,
+    transform ${HINT_FADE_MS}ms ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -${HINT_ARROW_SIZE / 2}px;
+    right: ${BUTTON_SIZE / 2 - HINT_ARROW_SIZE / 2}px;
+    width: ${HINT_ARROW_SIZE}px;
+    height: ${HINT_ARROW_SIZE}px;
+    background: var(--color-border-dark);
+    transform: rotate(45deg);
+  }
 `;
 
 function SpeakerIcon({ muted }: { muted: boolean }) {
@@ -64,15 +105,36 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
   );
 }
 
-export function SoundToggle() {
+export function SoundToggle({ ready }: { ready: boolean }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isOn, setIsOn] = useState(false);
+  const [hintState, setHintState] = useState<"hidden" | "shown" | "hiding">("hidden");
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = VOLUME;
     }
   }, []);
+
+  useEffect(() => {
+    if (!ready || localStorage.getItem(HINT_STORAGE_KEY)) return;
+
+    const showTimeout = setTimeout(() => setHintState("shown"), 50);
+    return () => clearTimeout(showTimeout);
+  }, [ready]);
+
+  useEffect(() => {
+    if (hintState !== "shown") return;
+
+    const hideTimeout = setTimeout(dismissHint, HINT_AUTO_DISMISS_MS);
+    return () => clearTimeout(hideTimeout);
+  }, [hintState]);
+
+  function dismissHint() {
+    setHintState("hiding");
+    localStorage.setItem(HINT_STORAGE_KEY, "1");
+    setTimeout(() => setHintState("hidden"), HINT_FADE_MS);
+  }
 
   function toggle() {
     const audio = audioRef.current;
@@ -84,11 +146,14 @@ export function SoundToggle() {
       audio.play();
     }
     setIsOn(!isOn);
+
+    if (hintState === "shown") dismissHint();
   }
 
   return (
     <>
       <audio ref={audioRef} src={ambientTrack} loop />
+      {hintState !== "hidden" && <Hint $visible={hintState === "shown"}>Listen while you paint</Hint>}
       <ToggleButton
         type="button"
         onClick={toggle}

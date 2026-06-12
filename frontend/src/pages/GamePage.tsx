@@ -37,7 +37,7 @@ const Title = styled.h1`
   font-size: 1.8rem;
   font-weight: 600;
   margin: 0;
-  border-bottom: 4px solid var(--color-success);
+  border-bottom: 4px solid var(--color-accent);
   padding-bottom: 4px;
 `;
 
@@ -215,7 +215,7 @@ export function GamePage() {
 
   return (
     <Border>
-      <SoundToggle />
+      <SoundToggle ready={!loading && game.challenge !== null} />
 
       <Container>
         <Title>Pixel Therapy</Title>
@@ -227,7 +227,7 @@ export function GamePage() {
           <>
             <GridsRow>
               <GridColumn>
-                <ColumnLabel>Title: <strong>{game.challenge.title}</strong></ColumnLabel>
+                <ColumnLabel>Title: <strong><span style={{borderBottom: '1px solid var(--color-accent)', paddingBottom: '2px'}}>{game.challenge.title}</span></strong></ColumnLabel>
                 <PixelGrid grid={game.challenge.grid} palette={game.challenge.palette} />
               </GridColumn>
               <VerticalPaletteColumn>
