@@ -197,4 +197,6 @@ Ganho colateral: hoje `frontend/src/types/pixelArt.ts` e `backend/src/types/pixe
 - [ ] Rodar `npm run dev` e testar o fluxo completo (gerar desafio, pintar, verificar, som)
 - [ ] Configurar `OPENAI_API_KEY` nas env vars do projeto na Vercel
 - [ ] Deploy na Vercel e validar em produção
-- [ ] 
+
+
+

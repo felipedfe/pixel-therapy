@@ -6,7 +6,14 @@ const GRID_SIZE = 12;
 const MODEL = "gpt-4o-mini";
 const MAX_ATTEMPTS = 3;
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let client: OpenAI | null = null;
+
+function getClient(): OpenAI {
+  if (!client) {
+    client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return client;
+}
 
 const SYSTEM_PROMPT = `You are an API that generates abstract pixel art challenges.
 
@@ -78,7 +85,7 @@ function isValidAIGridResult(data: unknown): data is AIGridResult {
 }
 
 async function requestGridFromAI(): Promise<unknown> {
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: MODEL,
     messages: [{ role: "system", content: SYSTEM_PROMPT }],
     response_format: {
