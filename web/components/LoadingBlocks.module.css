@@ -1,0 +1,26 @@
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.wrapper {
+  display: flex;
+  gap: 6px;
+}
+
+.block {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background-color: var(--block-color);
+  animation: bounce 1.2s ease-in-out infinite;
+  animation-delay: var(--block-delay);
+}

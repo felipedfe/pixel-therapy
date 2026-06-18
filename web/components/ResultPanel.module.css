@@ -1,0 +1,10 @@
+.wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 1.1rem;
+}
+
+.message {
+  color: var(--color-text-soft);
+}

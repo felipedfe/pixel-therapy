@@ -1,0 +1,66 @@
+.toggleButton {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.toggleButton:hover {
+  transform: translateY(-1px);
+}
+
+.active {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #fff;
+}
+
+.hint {
+  position: fixed;
+  top: 88px;
+  right: 40px;
+  max-width: 170px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--color-border-dark);
+  color: var(--color-surface);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 11;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 300ms ease,
+    transform 300ms ease;
+}
+
+.hint::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: 15px;
+  width: 10px;
+  height: 10px;
+  background: var(--color-border-dark);
+  transform: rotate(45deg);
+}
+
+.hintVisible {
+  opacity: 1;
+  transform: translateY(0);
+}

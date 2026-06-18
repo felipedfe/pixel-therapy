@@ -1,0 +1,31 @@
+:root {
+  --color-bg: #faf6f0;
+  --color-surface: #ffffff;
+  --color-text: #3a3a3a;
+  --color-text-soft: #8a8480;
+  --color-border: #e5ded5;
+  --color-border-dark: #b6a498;
+  --color-accent: #4ecdc4;
+  --color-error: #e0735c;
+  --color-success: #7fb685;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-plus-jakarta-sans), system-ui, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  outline: 4px solid var(--color-bg);
+  outline-offset: -4px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
