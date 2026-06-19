@@ -50,6 +50,11 @@ export function PixelGrid({
     onCellClick?.(row, col);
   }
 
+  function handleTouchStart(event: React.TouchEvent, row: number, col: number) {
+    event.preventDefault();
+    startPainting(row, col);
+  }
+
   function handleTouchMove(event: React.TouchEvent) {
     if (!editable || !isPaintingRef.current) return;
 
@@ -78,7 +83,7 @@ export function PixelGrid({
             style={{ "--cell-color": palette[value] } as CSSProperties}
             onMouseDown={() => startPainting(rowIndex, colIndex)}
             onMouseEnter={() => continuePainting(rowIndex, colIndex)}
-            onTouchStart={() => startPainting(rowIndex, colIndex)}
+            onTouchStart={(event) => handleTouchStart(event, rowIndex, colIndex)}
             aria-label={`Cell row ${rowIndex + 1}, column ${colIndex + 1}`}
           />
         )),
